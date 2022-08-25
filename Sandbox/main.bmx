@@ -66,7 +66,7 @@ Function UpdateParticles()
 			If y+1 <= box_size-1 Then
 				If ghost_box[x,y+1] <> 3 Then
 					If ghost_box[x,y] = 2 Then
-						If ghost_box[x,y+1] <> 4 And ghost_box[x,y+1] <> 2 Then
+						If box[x,y+1] <> 4 And box[x,y+1] <> 2 Then
 							box[x,y] = 0
 							box[x,y+1] = 2
 						EndIf
