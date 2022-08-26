@@ -1,8 +1,12 @@
+'Todo:
+'moddability
+
 Const w = 800
 Const h = 600
 
 Graphics w,h
 
+ 
 AppTitle = "Untitled Sandbox Game"
 
 Global size = 5
@@ -13,6 +17,7 @@ Global selected_type = 0
 Global box[box_size,box_size]
 Global ghost_box[box_size,box_size]
 
+Include "console.bmx"
 Include "loadfiles.bmx"
 
 Global buttons:TList = New TList
@@ -90,17 +95,38 @@ rock_button.newbutton(w-100,80,2,2,rock_img)
 Global sand_button:button = New button
 sand_button.newbutton(w-50,80,2,2,sand_img)
 
+
 While Not KeyDown(KEY_ESCAPE)
 	Cls	
-		
+
 	DrawParticles()
 	UpdateParticles()
 
 	GUI()
+
+	If KeyHit(KEY_TILDE) Or KeyHit(41) Then 
+		FlushKeys()
+		consoleopen = Not consoleopen
+	EndIf
+
+	''player_draw()
+
+		
+	If consoleopen Then
+		console()
+		drawconsole()
+	EndIf
+	
+
 	
 	Flip
 Wend
 End
+
+Function findchar:String(strin:String,count)
+	Return(Right(Left(strin,count),1))
+EndFunction
+
 
 Function GUI()
 	SetColor 97,54,11

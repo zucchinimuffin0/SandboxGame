@@ -2,7 +2,7 @@
 
 AutoImageFlags FILTEREDIMAGE|MASKEDIMAGE
 
-Global fire_img:TImage = LoadImage2("graphic\fire.png",FILTEREDIMAGE|MASKEDIMAGE)
+Global fire_img:TImage = LoadImage2("graphic\fire.png",MIPMAPPEDIMAGE)
 Global rock_img:TImage = LoadImage2("graphic\rock.png")
 Global sand_img:TImage = LoadImage2("graphic\sand.png")
 Global water_img:TImage = LoadImage2("graphic\water.png")
@@ -10,28 +10,68 @@ Global hovered_img:TImage = LoadImage2("graphic\hovered.png")
 
 Function LoadImage2:TImage(url:Object,flags = -1)
 	If LoadImage(url,flags) <> Null Then
-		Print("Loaded image "+String(url))
+		create_console_msg("Loaded image "+String(url),"success")
 		Return LoadImage(url,flags)
 	Else
-		Print("Couldn't load image '"+String(url)+"', file not found")
+		create_console_msg("Couldn't load image '"+String(url)+"', file not found","error")
 		Return LoadImage("assets\tile\missing.png")
 	EndIf
 EndFunction
 
 Function LoadAnimImage2:TImage(url:Object,cell_width,cell_height,first_cell,cell_count,flags = -1)
 	If LoadAnimImage(url,cell_width,cell_height,first_cell,cell_count,flags) <> Null Then
-		Print("Loaded image "+String(url))
+		create_console_msg("Loaded image "+String(url),"success")
 		Return LoadAnimImage(url,cell_width,cell_height,first_cell,cell_count,flags)
 	Else
-		Print("Couldn't load image '"+String(url)+"', file not found")
+		create_console_msg("Couldn't load image '"+String(url)+"', file not found","error")
 	EndIf
 EndFunction
 
 Function LoadImageFont2:TimageFont(url:Object,size,style = SMOOTHFONT)
 	If LoadImageFont(url:Object,size,style = SMOOTHFONT) <> Null Then
-		Print("Loaded font "+String(url))
+		create_console_msg("Loaded font "+String(url),"success")
 		Return LoadImageFont(url:Object,size,style = SMOOTHFONT)
 	Else
-		Print("Couldn't load font '"+String(url)+"', file not found")
+		create_console_msg("Couldn't load font '"+String(url)+"', file not found","error")
 	EndIf
+EndFunction
+
+Function LoadMat:Int[,](dir:Object,sizex = 32,sizey = 32)	
+	Local f:TStream = OpenStream(dir)
+	Local temp:String
+	Local count:Int
+	Local row:Int
+	Local array[sizex,sizey]
+	
+	If f = Null Then 
+		create_console_msg("Error loading level '"+String(dir)+"'","error")
+		Return
+	Else
+		If Right(String(dir),4) = ".lvl" Or Right(String(dir),4) = ".stf" Then
+			While Not Eof(f)
+				temp = ReadLine(f)
+				
+				For Local i = 0 To Len(temp)
+					If findchar(temp,i) <> "," Then
+						array[i/2,row] = Int(findchar(temp,i))
+					EndIf
+				Next
+				row = row + 1
+			Wend
+			CloseStream(f)
+		Else
+			create_console_msg("Error loading level '"+String(dir)+"'","error")
+		
+			For Local x = 0 To sizex-1
+				For Local y = 0 To sizey-1
+					array[x,y] = -1
+				Next
+			Next
+			
+			Return array
+		EndIf
+	EndIf
+
+	create_console_msg("Loaded level "+String(dir)+"","success")
+	Return array
 EndFunction
