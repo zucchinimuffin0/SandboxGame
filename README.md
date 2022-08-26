@@ -1,3 +1,3 @@
 # SandboxGame
 
-Made with BlitzMax
+If you'd like to compile it for yourself, you can install BlitzMax at https://blitzmax.org/
